@@ -4,6 +4,7 @@ require 'goliath'
 require 'em-synchrony'
 require 'pp'
 require 'grit'
+require "json"
 
 class Gittite < Goliath::API
   use Goliath::Rack::Params
