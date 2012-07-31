@@ -4,9 +4,13 @@ require 'goliath'
 require 'em-synchrony'
 require 'pp'
 require 'grit'
-require "json"
+require 'json'
+
+require "utils"
 
 class Gittite < Goliath::API
+  include Utils
+  use ::Rack::Reloader if  ARGV.index('-e') && ARGV[ARGV.index('-e') + 1] == 'test'
   use Goliath::Rack::Params
 
   def response(env)
@@ -14,11 +18,14 @@ class Gittite < Goliath::API
     pp payload
     repo = payload['repository']
 
-      branch = payload["ref"].match(/\w+$/)[0]
-      dir = branch.gsub('_', '-')
-      env.logger.info 'Updating repo: ' + repo['name'] + '/' + branch
-      deploy_path = File.join config['deploy_path'], repo['name'], dir
+    branch = payload["ref"].match(/\w+$/)[0]
+    dir = branch_to_dir(branch)
+    env.logger.info 'Updating repo: ' + repo['name'] + '/' + branch
+    deploy_to = "#{config['deploy_path']}/#{repo['name']}"
+    deploy_path = File.join deploy_to, dir
 
+    EM.defer do
+      env.logger.info "deploying to #{deploy_path}"
       if File.directory? deploy_path
           env.logger.info "Updating existing directory"
           env.logger.info `cd #{deploy_path}; git checkout #{branch}; git reset --hard; git pull`
@@ -26,31 +33,33 @@ class Gittite < Goliath::API
           env.logger.info `git clone -b #{branch} #{repo['url']} #{deploy_path}`
       end
 
-      Dir.chdir(deploy_path)
-      env.logger.info Dir.pwd
-      git = Grit::Repo.new(deploy_path)
-      begin
-        env.logger.info 'looking for after_deploy file...'
-        load deploy_path + "/config/github_hook_handler.rb"
-        env.logger.info 'Executed after_deploy file'
-      rescue LoadError=>e
-        env.logger.info 'no config file in project'
-      rescue =>e
-        env.logger.error e.message
+      Dir.chdir(deploy_path) do
+        env.logger.info "Current dir #{Dir.pwd}"
+        begin
+          env.logger.info 'looking for after_deploy file...'
+          load deploy_path + "/config/gittite.rb"
+          env.logger.info 'Executed after_deploy file'
+        rescue LoadError=>e
+          env.logger.info 'no config file in project'
+        rescue =>e
+          env.logger.error e.message
+        end
       end
 
-      branches = git.branches.to_a.map { |b| b.to_s.match(/\w+$/).to_s }.uniq
+      git = Grit::Repo.new(deploy_path)
+      branches = git.branches.to_a.map { |b| b.name.match(/\w+$/).to_s }.uniq
       env.logger.info 'Looking for obsolete branches.........'
       env.logger.info "Active branches: #{branches.inspect}"
       env.logger.info "#{Dir.pwd}. Catalogs: "
-      Dir.foreach("#{config['deploy_path']}/#{repo['name']}") { |d|
-        next if branches.include?(d) or branches.include?(d.gsub('-', '_'))
+      Dir.foreach(deploy_to) { |d|
+        next if branches.map{|b| branch_to_dir(b)}.include?(d)
         next if ['.','..'].include? d
         next unless File.directory?("#{config['deploy_path']}/#{repo['name']}/#{d}")
         env.logger.info d
         #FileUtils.rm_r File.join project['deploy_to'], d
       }
       env.logger.info 'Finished'
+    end
 
     return [200, {'Content-Type' => 'text/html'}, ["Success!"]]
   end
