@@ -15,7 +15,7 @@ Installation
 
 ###3. Run server
 
-      bundle exec ruby gittite.rb
+      bundle exec ruby gittite.rb -sv -p 9000 -e prod
 
 Configuration
 =============
