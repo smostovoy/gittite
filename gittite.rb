@@ -1,3 +1,7 @@
+$: << File.dirname(__FILE__) << File.join(File.dirname(__FILE__), 'lib')
+
+require 'goliath'
+require 'em-synchrony'
 require 'pp'
 require 'grit'
 
