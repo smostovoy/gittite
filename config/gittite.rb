@@ -1,0 +1,1 @@
+config['deploy_path'] = '/home/ubuntu/deploy/new'
