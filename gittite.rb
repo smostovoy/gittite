@@ -9,7 +9,7 @@ class Gittite < Goliath::API
   use Goliath::Rack::Params
 
   def response(env)
-    payload = params['payload']
+    payload = JSON.parse params['payload']
     pp payload
     repo = payload['repository']
 
