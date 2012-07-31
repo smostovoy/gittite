@@ -9,10 +9,11 @@ class Gittite < Goliath::API
   use Goliath::Rack::Params
 
   def response(env)
-    pp params
-    repo = params['repository']
+    payload = params['payload']
+    pp payload
+    repo = payload['repository']
 
-      branch = params["ref"].match(/\w+$/)[0]
+      branch = payload["ref"].match(/\w+$/)[0]
       dir = branch.gsub('_', '-')
       env.logger.info 'Updating repo: ' + repo['name'] + '/' + branch
       deploy_path = File.join config['deploy_path'], repo['name'], dir
