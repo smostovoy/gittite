@@ -43,10 +43,10 @@ class Gittite < Goliath::API
       env.logger.info 'Looking for obsolete branches.........'
       env.logger.info "Active branches: #{branches.inspect}"
       env.logger.info "#{Dir.pwd}. Catalogs: "
-      Dir.foreach(project['deploy_to']) { |d|
+      Dir.foreach("#{config['deploy_path']}/#{repo['name']}") { |d|
         next if branches.include?(d) or branches.include?(d.gsub('-', '_'))
         next if ['.','..'].include? d
-        next unless File.directory?(File.join project['deploy_to'], d)
+        next unless File.directory?("#{config['deploy_path']}/#{repo['name']}/#{d}")
         env.logger.info d
         #FileUtils.rm_r File.join project['deploy_to'], d
       }
