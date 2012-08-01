@@ -34,23 +34,24 @@ config['deploy_path'] = '/home/deploy/'
 ```
 ###2. Setup your web server
 Config fo Nginx will look like this:
-        server {
-            listen       80;
-            server_name  *.example.com;
-            root /home/deploy/example/$subdomain/public;
 
-            if ($host ~* ^([a-z0-9-_\.]+)\.granify.com$) {
-                set $subdomain $1;
-            }
+    server {
+        listen       80;
+        server_name  *.example.com;
+        root /home/deploy/example/$subdomain/public;
 
-            rails_env development;
-            passenger_enabled on;
-
-            error_page   500 502 503 504  /50x.html;
-            location = /50x.html {
-                root   html;
-            }
+        if ($host ~* ^([a-z0-9-_\.]+)\.granify.com$) {
+            set $subdomain $1;
         }
+
+        rails_env development;
+        passenger_enabled on;
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    }
 
 
 ###2. After deploy hook
