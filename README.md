@@ -2,13 +2,14 @@ Gittite
 ============
 Simple EM server for deploying GitHub projects with all branches with each push to repository.
 It's perfect for testing branches before merging them to master so it  was not designed for production server.
-It does not store previous releases.
-It supports after hooks.
+If you need slightly different thing check <a href="https://github.com/diogob/hercules" >this</a>
 
 Features
 ============
-###1. Supports execution of code after deploy
-###2. Based on <a href="https://github.com/postrank-labs/goliath" >Goliath</a> and Grit
+* Parses github post-receive http hook.
+* Executes a custom post-deploy script.
+* Does not store previous releases
+* Based on <a href="https://github.com/postrank-labs/goliath">Goliath</a> and <a href="https://github.com/mojombo/grit">Grit</a>
 
 Installation
 ============
