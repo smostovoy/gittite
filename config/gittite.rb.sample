@@ -1,0 +1,7 @@
+environment :production do
+  config['deploy_path'] = '/home/deploy'
+end
+
+environment :test do
+  config['deploy_path'] = '/tmp'
+end

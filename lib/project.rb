@@ -12,6 +12,7 @@ module Project
 
   def execute_after_deploy_hook
     hook_file = @deploy_path + "/config/gittite.rb"
+    hook_sh_file = @deploy_path + "/gittite.sh"
     Dir.chdir(@deploy_path) do
       env.logger.info "Current dir: #{Dir.pwd}"
       if File.exists? hook_file
@@ -21,6 +22,13 @@ module Project
         env.logger.info 'Executed after_deploy file'
       else
         env.logger.info 'no config file in project'
+      end
+
+      if File.exists? hook_sh_file
+        env.logger.info 'Executing after_deploy shell script...'
+        after_deploy = File.read(hook_sh_file)
+        system(after_deploy)
+        env.logger.info 'Executed after_deploy shell script'
       end
     end
   end

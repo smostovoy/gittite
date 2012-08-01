@@ -21,7 +21,7 @@ class Gittite < Goliath::API
     pp payload
     repo   = payload['repository']
     branch = payload["ref"].match(/\w+$/)[0]
-    dir    = branch_to_dir(branch)
+    dir = branch_to_dir(branch)
     env.logger.info 'Updating repo: ' + repo['name'] + '/' + branch
     @deploy_to = "#{config['deploy_path']}/#{repo['name']}"
     @deploy_path = File.join @deploy_to, dir

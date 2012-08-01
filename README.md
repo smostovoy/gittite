@@ -54,7 +54,7 @@ Config fo Nginx will look like this:
     }
 
 
-###2. After deploy hook
+###3. After deploy hook
 Create file {your project}/config/gittite.rb with something like:
 ```ruby
 #Current dir is your project root path
@@ -63,6 +63,6 @@ run 'touch ./tmp/restart.txt'
 ```
 Use method 'run' to execute system command. This code will be executed after updating code.
 
-###3. Set webhook in GitHub.
+###4. Set webhook in GitHub.
 Go to Admin/ Service hooks/ Webhook URLs  to add server address
 
