@@ -27,15 +27,14 @@ module Project
       if File.exists? hook_sh_file
         env.logger.info 'Executing after_deploy shell script...'
         after_deploy = File.read(hook_sh_file)
-        system(after_deploy)
+        env.logger.info system(after_deploy)
         env.logger.info 'Executed after_deploy shell script'
       end
     end
   end
 
   def clean_removed_branches
-    git = Grit::Repo.new(@deploy_path)
-    branches = git.remotes.to_a.map { |b| b.name.match(/\w+$/).to_s }.uniq
+    branches = @git.remotes.to_a.map { |b| b.name.match(/\w+$/).to_s }.uniq
     env.logger.info 'Looking for obsolete branches.........'
     env.logger.info "Active branches: #{branches.inspect}"
     env.logger.info "#{Dir.pwd}. Dirs to be removed: "

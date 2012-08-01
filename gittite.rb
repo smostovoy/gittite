@@ -20,15 +20,16 @@ class Gittite < Goliath::API
     payload = JSON.parse params['payload']
     pp payload
     repo   = payload['repository']
-    branch = payload["ref"].match(/\w+$/)[0]
-    dir = branch_to_dir(branch)
-    env.logger.info 'Updating repo: ' + repo['name'] + '/' + branch
+    @branch = payload["ref"].match(/\w+$/)[0]
+    dir = branch_to_dir(@branch)
+    env.logger.info 'Updating repo: ' + repo['name'] + '/' + @branch
     @deploy_to = "#{config['deploy_path']}/#{repo['name']}"
-    @deploy_path = File.join @deploy_to, dir
+    @deploy_path = @path = File.join @deploy_to, dir
 
     EM.defer do
       begin
-        update_code branch, repo['url']
+        update_code @branch, repo['url']
+        @git = Grit::Repo.new(@deploy_path)
         execute_after_deploy_hook
         clean_removed_branches
       rescue =>e
