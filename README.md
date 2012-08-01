@@ -5,6 +5,11 @@ It's perfect for testing branches before merging them to master so it  was not d
 It does not store previous releases.
 It supports after hooks.
 
+Features
+============
+###1. Supports execution of code after deploy
+###2. Based on <a href="https://github.com/postrank-labs/goliath" >Goliath</a> and Grit
+
 Installation
 ============
 
