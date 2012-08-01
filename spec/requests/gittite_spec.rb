@@ -1,5 +1,6 @@
 require 'spec_helper.rb'
 require "net/http"
+require 'fileutils'
 
 describe Gittite do
   def data
@@ -29,8 +30,9 @@ describe Gittite do
     resp
   end
 
-  it "should return 200" do
+  it "should clone repo" do
     resp = make_request('/', data)
-    p resp.header.class
+    File.directory?('/tmp/store_spree').should be_true
+    FileUtils.rm_r '/tmp/store_spree' rescue nil
   end
 end

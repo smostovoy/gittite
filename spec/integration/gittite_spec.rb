@@ -21,7 +21,7 @@ describe Gittite do
         p c.response
         c.response_header.status.should == 200
       end
-      EM.stop
+      server.stop
     end
   end
 end

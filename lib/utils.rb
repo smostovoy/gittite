@@ -4,6 +4,10 @@ module Utils
   end
 
   def run command
-    Goliath.env.logger system(command)
+    STDOUT << system(command)
+  end
+
+  def env
+    @env ||= Thread.current['goliath.env']
   end
 end

@@ -18,7 +18,7 @@ Installation
 
 ###3. Run server
 
-      bundle exec ruby gittite.rb -sv -p 9000 -e prod
+      bundle exec gittite.rb -sv -p 9000 -e prod
 
 Configuration
 =============
@@ -28,7 +28,7 @@ config['deploy_path'] = '/home/deploy/'
 ```
 
 ###2. After deploy hook
-Create file in {your project}/config/gittite.rb with something like:
+Create file {your project}/config/gittite.rb with something like:
 ```ruby
 #Current dir is your project root path
 run 'bundle install'
@@ -37,5 +37,5 @@ run 'touch ./tmp/restart.txt'
 Use method 'run' to execute system command. This code will be executed after updating code.
 
 ###3. Set webhook in GitHub.
-Go to admin/service hooks/webhooks  to add server address
+Go to Admin/ Service hooks/ Webhook URLs  to add server address
 
